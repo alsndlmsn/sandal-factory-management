@@ -131,3 +131,12 @@ h2 { margin-bottom: 3px; color: var(--navy); font-size: 17px; letter-spacing: -.
 .day-summary-grid .net-profit strong { color: #ffffff; }
 @media (max-width: 1080px) { .day-summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .day-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .day-summary-grid .net-profit { grid-column: 1 / -1; } .day-date { white-space: normal; } }
+
+.nav-caption { margin: 20px 13px 7px; color: #91aaa8; font-size: 10px; font-weight: 800; }
+.nav-more { margin-top: 5px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 7px; }
+.nav-more summary { padding: 11px 13px; color: #b8ccca; cursor: pointer; font-size: 12px; font-weight: 800; list-style: none; }
+.nav-more summary::-webkit-details-marker { display: none; }
+.nav-more summary::after { content: '＋'; float: left; color: #79bdb3; font-size: 16px; line-height: 1; }
+.nav-more[open] summary::after { content: '−'; }
+.nav-more-list { display: grid; gap: 3px; }
+.nav-more-list .nav-link { opacity: .88; }
