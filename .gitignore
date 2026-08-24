@@ -1,7 +1,0 @@
-assets/config.js
-.env
-.env.*
-*.pem
-*.key
-supabase/.temp/
-.DS_Store
