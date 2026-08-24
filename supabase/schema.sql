@@ -654,6 +654,28 @@ begin
 end;
 $$;
 
+-- تفعيل RLS على كل الجداول المكشوفة في public قبل الاعتماد على السياسات.
+alter table public.profiles enable row level security;
+alter table public.units enable row level security;
+alter table public.warehouses enable row level security;
+alter table public.items enable row level security;
+alter table public.item_unit_conversions enable row level security;
+alter table public.item_price_history enable row level security;
+alter table public.customers enable row level security;
+alter table public.suppliers enable row level security;
+alter table public.financial_accounts enable row level security;
+alter table public.sales enable row level security;
+alter table public.sale_lines enable row level security;
+alter table public.inventory_transactions enable row level security;
+alter table public.inventory_transaction_lines enable row level security;
+alter table public.financial_transactions enable row level security;
+alter table public.expenses enable row level security;
+alter table public.workers enable row level security;
+alter table public.worker_advances enable row level security;
+alter table public.payroll_runs enable row level security;
+alter table public.payroll_entries enable row level security;
+alter table public.audit_logs enable row level security;
+
 -- المنح: لا يوجد وصول مجهول إلى أي بيانات تشغيلية.
 revoke all on public.v_stock_balances, public.v_low_stock, public.v_financial_balances from anon, authenticated;
 revoke all on all tables in schema public from anon;
