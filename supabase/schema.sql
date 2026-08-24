@@ -585,3 +585,23 @@ begin
   if p.id is null then raise exception 'فترة المرتبات غير قابلة للاعتماد'; end if; return p;
 end; $$;
 grant execute on function public.approve_payroll_period(uuid) to authenticated;
+
+-- Supabase REST access requires SQL grants in addition to RLS policies.
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant usage, select on all sequences in schema public to authenticated;
+grant select on public.v_stock_balances, public.v_cash_balances to authenticated;
+revoke all on all tables in schema public from anon;
+revoke all on all sequences in schema public from anon;
+revoke execute on all functions in schema public from public;
+revoke execute on all functions in schema public from anon;
+grant execute on function public.current_user_has_permission(text) to authenticated;
+grant execute on function public.current_user_is_manager() to authenticated;
+grant execute on function public.stock_balance(uuid,uuid) to authenticated;
+grant execute on function public.manager_dashboard_summary() to authenticated;
+grant execute on function public.approve_sale(uuid) to authenticated;
+grant execute on function public.approve_stock_movement(uuid) to authenticated;
+grant execute on function public.approve_expense(uuid) to authenticated;
+grant execute on function public.record_cash_transaction(text,uuid,public.movement_direction,text,numeric,text) to authenticated;
+grant execute on function public.approve_production_order(uuid) to authenticated;
+grant execute on function public.correct_attendance(uuid,timestamptz,timestamptz,text) to authenticated;
+grant execute on function public.approve_payroll_period(uuid) to authenticated;
