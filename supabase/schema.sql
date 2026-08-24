@@ -605,3 +605,142 @@ grant execute on function public.record_cash_transaction(text,uuid,public.moveme
 grant execute on function public.approve_production_order(uuid) to authenticated;
 grant execute on function public.correct_attendance(uuid,timestamptz,timestamptz,text) to authenticated;
 grant execute on function public.approve_payroll_period(uuid) to authenticated;
+
+-- Interactive employee attendance actions.
+create or replace function public.toggle_employee_attendance(p_employee_id uuid, p_action text)
+returns public.attendance_records
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare result public.attendance_records; open_record public.attendance_records;
+begin
+  if auth.uid() is null or not public.current_user_has_permission('attendance.create') then raise exception 'غير مصرح بتسجيل الحضور'; end if;
+  if not exists (select 1 from public.employees where id=p_employee_id and status='active') then raise exception 'الموظف غير موجود أو غير نشط'; end if;
+  if p_action='check_in' then
+    select * into open_record from public.attendance_records where employee_id=p_employee_id and check_out_at is null order by check_in_at desc limit 1;
+    if open_record.id is not null then return open_record; end if;
+    insert into public.attendance_records(employee_id,status,check_in_at,recorded_by) values(p_employee_id,'present',now(),auth.uid()) returning * into result;
+    return result;
+  elsif p_action='check_out' then
+    update public.attendance_records set check_out_at=now(),updated_at=now() where id=(select id from public.attendance_records where employee_id=p_employee_id and check_out_at is null order by check_in_at desc limit 1) returning * into result;
+    if result.id is null then raise exception 'لا يوجد حضور مفتوح لهذا الموظف'; end if;
+    return result;
+  else raise exception 'الإجراء غير معروف'; end if;
+end;
+$$;
+revoke execute on function public.toggle_employee_attendance(uuid,text) from public;
+revoke execute on function public.toggle_employee_attendance(uuid,text) from anon;
+grant execute on function public.toggle_employee_attendance(uuid,text) to authenticated;
+
+-- Incentives and automated payroll preparation.
+create table if not exists public.employee_incentives (
+  id uuid primary key default gen_random_uuid(), batch_number text not null,
+  employee_id uuid not null references public.employees(id) on delete restrict,
+  title text not null, amount numeric(18,2) not null check (amount > 0), incentive_date date not null default current_date,
+  payroll_period_id uuid references public.payroll_periods(id) on delete set null, notes text,
+  created_by uuid not null references public.profiles(id), created_at timestamptz not null default now()
+);
+create index if not exists idx_employee_incentives_employee_date on public.employee_incentives(employee_id,incentive_date desc);
+alter table public.employee_incentives enable row level security;
+drop policy if exists incentives_read on public.employee_incentives;
+create policy incentives_read on public.employee_incentives for select to authenticated using (public.current_user_has_permission('payroll.view'));
+drop policy if exists incentives_create on public.employee_incentives;
+create policy incentives_create on public.employee_incentives for insert to authenticated with check (public.current_user_has_permission('payroll.manage') and created_by=auth.uid());
+drop policy if exists incentives_manage on public.employee_incentives;
+create policy incentives_manage on public.employee_incentives for update to authenticated using (public.current_user_has_permission('payroll.manage')) with check (public.current_user_has_permission('payroll.manage'));
+grant select,insert,update on public.employee_incentives to authenticated;
+create or replace function public.prepare_payroll_period(p_period_id uuid)
+returns setof public.payroll_records language plpgsql security definer set search_path = public as $$
+declare period_row public.payroll_periods; e record; r public.payroll_records; basic numeric; bonus numeric; outstanding numeric; advance_part numeric; attended_days numeric; worked_hours numeric;
+begin
+  if auth.uid() is null or not public.current_user_has_permission('payroll.manage') then raise exception 'غير مصرح بإعداد المرتبات'; end if;
+  select * into period_row from public.payroll_periods where id=p_period_id for update;
+  if period_row.id is null or period_row.status not in ('draft','pending') then raise exception 'فترة المرتبات غير قابلة للإعداد'; end if;
+  for e in select * from public.employees where status='active' and employment_date <= period_row.period_end order by full_name loop
+    select count(*)::numeric into attended_days from public.attendance_records a where a.employee_id=e.id and a.check_in_at is not null and (a.check_in_at at time zone 'Africa/Khartoum')::date between period_row.period_start and period_row.period_end and a.status in ('present','late','half_day');
+    select coalesce(sum(coalesce(a.working_minutes,0))/60.0,0) into worked_hours from public.attendance_records a where a.employee_id=e.id and a.check_in_at is not null and (a.check_in_at at time zone 'Africa/Khartoum')::date between period_row.period_start and period_row.period_end;
+    basic := case when e.wage_type='monthly' then e.base_salary when e.wage_type='daily' then e.base_salary*attended_days else e.base_salary*worked_hours end;
+    select coalesce(sum(i.amount),0) into bonus from public.employee_incentives i where i.employee_id=e.id and i.incentive_date between period_row.period_start and period_row.period_end and (i.payroll_period_id is null or i.payroll_period_id=p_period_id);
+    select coalesce(sum(a.amount-a.deducted_amount),0) into outstanding from public.employee_advances a where a.employee_id=e.id and a.advance_date::date <= period_row.period_end and a.deducted_amount < a.amount;
+    advance_part := least(outstanding,greatest(0,basic+bonus));
+    insert into public.payroll_records(payroll_period_id,employee_id,basic_salary,bonuses,advances_deducted,payment_status) values(p_period_id,e.id,basic,bonus,advance_part,'draft') on conflict(payroll_period_id,employee_id) do update set basic_salary=excluded.basic_salary,bonuses=excluded.bonuses,advances_deducted=excluded.advances_deducted returning * into r;
+    update public.employee_incentives set payroll_period_id=p_period_id where employee_id=e.id and incentive_date between period_row.period_start and period_row.period_end and (payroll_period_id is null or payroll_period_id=p_period_id);
+    return next r;
+  end loop;
+end; $$;
+revoke execute on function public.prepare_payroll_period(uuid) from public;
+revoke execute on function public.prepare_payroll_period(uuid) from anon;
+grant execute on function public.prepare_payroll_period(uuid) to authenticated;
+
+-- Incentive batch action: one employee or all active employees.
+create or replace function public.grant_employee_incentive(p_batch_number text,p_title text,p_amount numeric,p_scope text,p_employee_id uuid default null)
+returns integer language plpgsql security definer set search_path = public as $$
+declare inserted_count integer := 0;
+begin
+  if auth.uid() is null or not public.current_user_has_permission('payroll.manage') then raise exception 'غير مصرح بإضافة الحوافز'; end if;
+  if p_amount <= 0 or length(btrim(p_title)) < 2 then raise exception 'بيانات الحافز غير صحيحة'; end if;
+  if p_scope='employee' then
+    if p_employee_id is null then raise exception 'اختر الموظف المستحق للحافز'; end if;
+    insert into public.employee_incentives(batch_number,employee_id,title,amount,created_by) values(p_batch_number,p_employee_id,p_title,p_amount,auth.uid()); inserted_count := 1;
+  elsif p_scope='all' then
+    insert into public.employee_incentives(batch_number,employee_id,title,amount,created_by) select p_batch_number,id,p_title,p_amount,auth.uid() from public.employees where status='active'; get diagnostics inserted_count = row_count;
+  else raise exception 'نطاق الحافز غير معروف'; end if;
+  return inserted_count;
+end; $$;
+revoke execute on function public.grant_employee_incentive(text,text,numeric,text,uuid) from public;
+revoke execute on function public.grant_employee_incentive(text,text,numeric,text,uuid) from anon;
+grant execute on function public.grant_employee_incentive(text,text,numeric,text,uuid) to authenticated;
+
+-- Audit coverage for operational and administration tables.
+drop trigger if exists audit_attendance_records on public.attendance_records;
+create trigger audit_attendance_records after insert or update or delete on public.attendance_records for each row execute function public.write_activity_log();
+drop trigger if exists audit_employee_advances on public.employee_advances;
+create trigger audit_employee_advances after insert or update or delete on public.employee_advances for each row execute function public.write_activity_log();
+drop trigger if exists audit_employee_incentives on public.employee_incentives;
+create trigger audit_employee_incentives after insert or update or delete on public.employee_incentives for each row execute function public.write_activity_log();
+drop trigger if exists audit_payroll_periods on public.payroll_periods;
+create trigger audit_payroll_periods after insert or update or delete on public.payroll_periods for each row execute function public.write_activity_log();
+drop trigger if exists audit_payroll_records on public.payroll_records;
+create trigger audit_payroll_records after insert or update or delete on public.payroll_records for each row execute function public.write_activity_log();
+drop trigger if exists audit_cash_transactions on public.cash_transactions;
+create trigger audit_cash_transactions after insert or update or delete on public.cash_transactions for each row execute function public.write_activity_log();
+drop trigger if exists audit_bank_transactions on public.bank_transactions;
+create trigger audit_bank_transactions after insert or update or delete on public.bank_transactions for each row execute function public.write_activity_log();
+drop trigger if exists audit_products on public.products;
+create trigger audit_products after insert or update or delete on public.products for each row execute function public.write_activity_log();
+drop trigger if exists audit_warehouses on public.warehouses;
+create trigger audit_warehouses after insert or update or delete on public.warehouses for each row execute function public.write_activity_log();
+drop trigger if exists audit_profiles on public.profiles;
+create trigger audit_profiles after insert or update or delete on public.profiles for each row execute function public.write_activity_log();
+drop trigger if exists audit_user_roles on public.user_roles;
+create trigger audit_user_roles after insert or update or delete on public.user_roles for each row execute function public.write_activity_log();
+
+-- Atomic point-of-sale draft creation.
+create or replace function public.create_sale_draft(p_invoice_number text,p_warehouse_id uuid,p_payment_method public.payment_method,p_cash_register_id uuid,p_bank_id uuid,p_bank_transaction_number text,p_customer_name text,p_discount numeric,p_lines jsonb,p_notes text default null)
+returns public.sales language plpgsql security definer set search_path = public as $$
+declare s public.sales; customer_id_value uuid; line jsonb; subtotal_value numeric := 0; product_row public.products; quantity_value numeric; price_value numeric;
+begin
+  if auth.uid() is null or not public.current_user_has_permission('sales.create') then raise exception 'غير مصرح بإنشاء الفاتورة'; end if;
+  if length(btrim(p_invoice_number)) < 2 or p_warehouse_id is null or jsonb_array_length(coalesce(p_lines,'[]'::jsonb)) < 1 then raise exception 'أكمل رقم الفاتورة والمخزن وصنفًا واحدًا على الأقل'; end if;
+  if p_discount < 0 then raise exception 'الخصم غير صحيح'; end if;
+  if p_payment_method='cash' and p_cash_register_id is null then raise exception 'اختر الخزنة'; end if;
+  if p_payment_method='bank' and (p_bank_id is null or length(btrim(coalesce(p_bank_transaction_number,''))) < 3) then raise exception 'اختر البنك وأدخل رقم العملية البنكية'; end if;
+  if p_customer_name is not null and length(btrim(p_customer_name)) > 0 then select id into customer_id_value from public.customers where lower(name)=lower(btrim(p_customer_name)) limit 1; if customer_id_value is null then insert into public.customers(name,created_by) values(btrim(p_customer_name),auth.uid()) returning id into customer_id_value; end if; end if;
+  for line in select * from jsonb_array_elements(p_lines) loop
+    select * into product_row from public.products where id=(line->>'product_id')::uuid and is_active=true for share;
+    if product_row.id is null then raise exception 'الصنف المختار غير موجود'; end if;
+    quantity_value := (line->>'quantity')::numeric; price_value := coalesce((line->>'unit_price')::numeric,product_row.sale_price);
+    if quantity_value <= 0 or price_value < 0 then raise exception 'الكمية أو السعر غير صحيح'; end if;
+    subtotal_value := subtotal_value + quantity_value*price_value;
+  end loop;
+  insert into public.sales(invoice_number,customer_id,warehouse_id,payment_method,cash_register_id,bank_id,bank_transaction_number,subtotal,discount,total,status,notes,created_by) values(p_invoice_number,customer_id_value,p_warehouse_id,p_payment_method,p_cash_register_id,p_bank_id,nullif(btrim(p_bank_transaction_number),''),subtotal_value,p_discount,greatest(0,subtotal_value-p_discount),'draft',p_notes,auth.uid()) returning * into s;
+  for line in select * from jsonb_array_elements(p_lines) loop
+    select * into product_row from public.products where id=(line->>'product_id')::uuid; quantity_value := (line->>'quantity')::numeric; price_value := coalesce((line->>'unit_price')::numeric,product_row.sale_price);
+    insert into public.sale_items(sale_id,product_id,quantity,unit_code,unit_price,unit_cost) values(s.id,product_row.id,quantity_value,product_row.unit_code,price_value,product_row.purchase_price);
+  end loop;
+  return s;
+end; $$;
+revoke execute on function public.create_sale_draft(text,uuid,public.payment_method,uuid,uuid,text,text,numeric,jsonb,text) from public;
+revoke execute on function public.create_sale_draft(text,uuid,public.payment_method,uuid,uuid,text,text,numeric,jsonb,text) from anon;
+grant execute on function public.create_sale_draft(text,uuid,public.payment_method,uuid,uuid,text,text,numeric,jsonb,text) to authenticated;

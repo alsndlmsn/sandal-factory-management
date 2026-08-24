@@ -1,0 +1,23 @@
+-- Extend the existing audit trigger to every operational table.
+drop trigger if exists audit_attendance_records on public.attendance_records;
+create trigger audit_attendance_records after insert or update or delete on public.attendance_records for each row execute function public.write_activity_log();
+drop trigger if exists audit_employee_advances on public.employee_advances;
+create trigger audit_employee_advances after insert or update or delete on public.employee_advances for each row execute function public.write_activity_log();
+drop trigger if exists audit_employee_incentives on public.employee_incentives;
+create trigger audit_employee_incentives after insert or update or delete on public.employee_incentives for each row execute function public.write_activity_log();
+drop trigger if exists audit_payroll_periods on public.payroll_periods;
+create trigger audit_payroll_periods after insert or update or delete on public.payroll_periods for each row execute function public.write_activity_log();
+drop trigger if exists audit_payroll_records on public.payroll_records;
+create trigger audit_payroll_records after insert or update or delete on public.payroll_records for each row execute function public.write_activity_log();
+drop trigger if exists audit_cash_transactions on public.cash_transactions;
+create trigger audit_cash_transactions after insert or update or delete on public.cash_transactions for each row execute function public.write_activity_log();
+drop trigger if exists audit_bank_transactions on public.bank_transactions;
+create trigger audit_bank_transactions after insert or update or delete on public.bank_transactions for each row execute function public.write_activity_log();
+drop trigger if exists audit_products on public.products;
+create trigger audit_products after insert or update or delete on public.products for each row execute function public.write_activity_log();
+drop trigger if exists audit_warehouses on public.warehouses;
+create trigger audit_warehouses after insert or update or delete on public.warehouses for each row execute function public.write_activity_log();
+drop trigger if exists audit_profiles on public.profiles;
+create trigger audit_profiles after insert or update or delete on public.profiles for each row execute function public.write_activity_log();
+drop trigger if exists audit_user_roles on public.user_roles;
+create trigger audit_user_roles after insert or update or delete on public.user_roles for each row execute function public.write_activity_log();
