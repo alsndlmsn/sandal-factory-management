@@ -684,7 +684,8 @@ revoke all on all tables in schema public from anon;
 revoke all on all tables in schema public from authenticated;
 grant select, insert, update, delete on all tables in schema public to authenticated;
 grant usage on schema public to authenticated;
-revoke all on schema private from public, anon, authenticated;
+revoke all on schema private from public, anon;
+grant usage on schema private to authenticated;
 
 -- سياسات SELECT منفصلة حسب أقل صلاحية.
 create policy profiles_select on public.profiles for select to authenticated using (id=auth.uid() or private.is_manager());
@@ -760,6 +761,9 @@ create policy payroll_runs_delete on public.payroll_runs for delete to authentic
 
 -- لا تعرض أي دالة إدارية عامة غير مطلوبة.
 revoke execute on all functions in schema private from public, anon, authenticated;
+grant execute on function private.current_app_role() to authenticated;
+grant execute on function private.has_permission(text) to authenticated;
+grant execute on function private.is_manager() to authenticated;
 grant execute on function public.dashboard_summary() to authenticated;
 grant execute on function public.approve_inventory_transaction(uuid,text) to authenticated;
 grant execute on function public.approve_financial_transaction(uuid,text) to authenticated;
