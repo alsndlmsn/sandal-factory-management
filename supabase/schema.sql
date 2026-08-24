@@ -356,7 +356,9 @@ begin
   if permission_name = 'finance' and r = 'cashier' then return true; end if;
   if permission_name = 'payroll' and r = 'payroll' then return true; end if;
   if permission_name = 'reports' and r in ('sales','warehouse','cashier','payroll') then return true; end if;
-  if permission_name = 'manage_prices' then return exists (select 1 from public.profiles p where p.id = auth.uid() and p.manage_prices);
+  if permission_name = 'manage_prices' then
+    return exists (select 1 from public.profiles p where p.id = auth.uid() and p.manage_prices);
+  end if;
   return false;
 end;
 $$;
