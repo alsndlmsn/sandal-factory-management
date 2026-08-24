@@ -161,6 +161,7 @@ create table if not exists public.sale_lines (
   quantity numeric(18,3) not null check (quantity > 0),
   unit text not null references public.units(code),
   unit_price_snapshot numeric(18,2) not null check (unit_price_snapshot >= 0),
+  unit_cost_snapshot numeric(18,2) not null default 0 check (unit_cost_snapshot >= 0),
   discount numeric(18,2) not null default 0 check (discount >= 0),
   line_total numeric(18,2) generated always as ((quantity * unit_price_snapshot) - discount) stored,
   created_at timestamptz not null default now(),

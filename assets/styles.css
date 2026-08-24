@@ -115,3 +115,19 @@ h2 { margin-bottom: 3px; color: var(--navy); font-size: 17px; letter-spacing: -.
 .hidden-panel + .page-actions { margin-top: 16px; }
 @media (max-width: 980px) { .onboarding-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .onboarding-steps { grid-template-columns: 1fr; } .onboarding-step { min-height: 72px; } }
+
+.day-summary { border: 1px solid #d7e9e3; background: linear-gradient(135deg, #f5fbf8 0%, #ffffff 100%); }
+.day-summary .card-heading { align-items: flex-start; }
+.day-date { color: var(--muted); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.day-summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.day-summary-grid > div { min-height: 108px; padding: 15px; border: 1px solid #e2eeea; border-radius: 12px; background: rgba(255,255,255,.78); }
+.day-summary-grid span, .day-summary-grid small { display: block; }
+.day-summary-grid span { color: var(--muted); font-size: 11px; font-weight: 700; }
+.day-summary-grid strong { display: block; margin: 10px 0 5px; color: var(--navy); font-size: 19px; }
+.day-summary-grid small { color: var(--muted); font-size: 10px; line-height: 1.5; }
+.day-summary-grid .profit-positive strong { color: #0d8061; }
+.day-summary-grid .net-profit { border-color: #0c6b68; background: #0d4d5a; }
+.day-summary-grid .net-profit span, .day-summary-grid .net-profit small { color: #c8e9e2; }
+.day-summary-grid .net-profit strong { color: #ffffff; }
+@media (max-width: 1080px) { .day-summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .day-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .day-summary-grid .net-profit { grid-column: 1 / -1; } .day-date { white-space: normal; } }
