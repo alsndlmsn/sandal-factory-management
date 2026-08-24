@@ -1,0 +1,18 @@
+const cfg=window.APP_CONFIG||{};
+const supabaseReady=Boolean(cfg.supabaseUrl&&cfg.supabaseAnonKey&&window.supabase);
+const db=supabaseReady?window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}}):null;
+const queueKey=cfg.offlineQueueKey||'sandal_factory_offline_queue_v1';
+function readQueue(){try{return JSON.parse(localStorage.getItem(queueKey)||'[]')}catch{return[]}}
+function writeQueue(items){localStorage.setItem(queueKey,JSON.stringify(items))}
+function makeId(){return crypto?.randomUUID?crypto.randomUUID():`local-${Date.now()}-${Math.random().toString(16).slice(2)}`}
+function online(){return navigator.onLine!==false}
+async function dbSelect(table,columns='*',options={}){if(!db)throw new Error('لم يتم إعداد اتصال Supabase.');let q=db.from(table).select(columns);if(options.order)q=q.order(options.order.column,{ascending:options.order.ascending!==false});if(options.limit)q=q.limit(options.limit);if(options.eq)Object.entries(options.eq).forEach(([k,v])=>{q=q.eq(k,v)});if(options.neq)Object.entries(options.neq).forEach(([k,v])=>{q=q.neq(k,v)});if(options.gte)q=q.gte(options.gte[0],options.gte[1]);if(options.lte)q=q.lte(options.lte[0],options.lte[1]);if(options.ilike)q=q.ilike(options.ilike[0],options.ilike[1]);const{data,error}=await q;if(error)throw error;return data||[]}
+async function dbInsert(table,payload,opts={}){if(!db)throw new Error('لم يتم إعداد اتصال Supabase.');if(!online()&&opts.queue){const item={id:makeId(),kind:'insert',table,payload,created_at:new Date().toISOString(),status:'queued'};const q=readQueue();q.push(item);writeQueue(q);return {...payload,__queued:item.id}}
+const{data,error}=await db.from(table).insert(payload).select().single();if(error)throw error;return data}
+async function dbUpdate(table,values,filters){if(!db)throw new Error('لم يتم إعداد اتصال Supabase.');let q=db.from(table).update(values);Object.entries(filters||{}).forEach(([k,v])=>{q=q.eq(k,v)});const{data,error}=await q.select().single();if(error)throw error;return data}
+async function dbRpc(name,args={}){if(!db)throw new Error('لم يتم إعداد اتصال Supabase.');if(!online())throw new Error('هذه العملية تحتاج اتصالًا بالإنترنت للتأكد من الرصيد ومنع التكرار.');const{data,error}=await db.rpc(name,args);if(error)throw error;return data}
+async function dbFunction(name,payload={}){if(!db)throw new Error('لم يتم إعداد اتصال Supabase.');if(!online())throw new Error('هذه العملية تحتاج اتصالًا بالإنترنت.');const{data,error}=await db.functions.invoke(name,{body:payload});if(error)throw error;return data}
+async function flushQueue(){if(!db||!online())return;const q=readQueue();if(!q.length)return;const remaining=[];for(const item of q){try{if(item.kind==='insert'){const{error}=await db.from(item.table).insert(item.payload);if(error)throw error}}catch(error){remaining.push({...item,error:String(error.message||error)})}}writeQueue(remaining);return{sent:q.length-remaining.length,remaining:remaining.length}}
+function queuedCount(){return readQueue().length}
+function friendlyError(error){const m=String(error?.message||error||'حدث خطأ غير معروف');if(/JWT|auth|password|credential/i.test(m))return'بيانات الدخول غير صحيحة أو انتهت الجلسة.';if(/permission|policy|denied|RLS|not authorized/i.test(m))return'ليست لديك صلاحية لتنفيذ هذه العملية.';if(/duplicate|unique/i.test(m))return'هذا الرقم مستخدم من قبل.';if(/stock|quantity|balance|رصيد/i.test(m))return'الكمية أو الرصيد المتاح لا يكفي لتنفيذ العملية.';return m}
+window.addEventListener('online',()=>{flushQueue().then(()=>window.dispatchEvent(new CustomEvent('queue:updated'))).catch(()=>{})});
