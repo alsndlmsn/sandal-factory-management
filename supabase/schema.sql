@@ -726,7 +726,7 @@ create policy advances_insert on public.worker_advances for insert to authentica
 create policy payroll_runs_insert on public.payroll_runs for insert to authenticated with check (status='draft' and private.has_permission('payroll'));
 
 -- سياسات UPDATE منفصلة: المسودات فقط، وإدارة الأدوار عبر RPC.
-create policy profiles_update on public.profiles for update to authenticated using (private.is_manager() and id<>auth.uid()) with check (private.is_manager() and id<>auth.uid());
+-- لا توجد سياسة UPDATE مباشرة لملفات profiles؛ تغيير الدور والحالة وكلمات المرور يتم عبر RPC/Edge Function مدققة فقط.
 create policy warehouses_update on public.warehouses for update to authenticated using (private.has_permission('warehouse')) with check (private.has_permission('warehouse'));
 create policy items_update on public.items for update to authenticated using (private.has_permission('warehouse')) with check (private.has_permission('warehouse'));
 create policy customers_update on public.customers for update to authenticated using (private.has_permission('sales')) with check (private.has_permission('sales'));
