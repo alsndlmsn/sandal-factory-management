@@ -55,7 +55,7 @@
   .data-table thead{display:none}
   .data-table tbody{display:grid;gap:12px}
   .data-table tbody tr{display:grid;gap:6px;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 6px 18px rgba(21,51,62,.04)}
-  .data-table tbody td,.data-table tbody th{display:grid;grid-template-columns:minmax(92px,36%) minmax(0,1fr);align-items:start;gap:10px;padding:6px 0;border:0;min-width:0;text-align:right;line-height:1.65}
+  .data-table tbody td,.data-table tbody th{display:flex;flex-direction:column;align-items:stretch;gap:3px;padding:7px 0;border:0;min-width:0;text-align:right;line-height:1.65}
   .data-table tbody td::before,.data-table tbody th::before{content:attr(data-label);color:var(--muted);font-size:11px;font-weight:800}
   .data-table tbody td[colspan],.data-table tbody th[colspan]{display:block;text-align:center;padding:10px}
   .data-table tbody td[colspan]::before,.data-table tbody th[colspan]::before{display:none}
@@ -64,7 +64,7 @@
   .data-table td:last-child .table-tools .btn{flex:1 1 100px}
 }
 @media(max-width:430px){
-  .data-table tbody td,.data-table tbody th{grid-template-columns:minmax(82px,39%) minmax(0,1fr);font-size:12px}
+  .data-table tbody td,.data-table tbody th{font-size:12px}
   .data-table tbody td::before,.data-table tbody th::before{font-size:10px}
 }
 
@@ -97,3 +97,9 @@
 .password-toggle:active{transform:scale(.97)}
 .password-toggle:focus-visible{outline:3px solid rgba(12,149,139,.2);outline-offset:2px}
 @media(max-width:430px){.password-toggle{min-width:70px}.login-card h2{font-size:26px}}
+
+/* Attendance list: mouse-friendly desktop scroll and stacked mobile cards */
+.attendance-table-wrap{max-height:calc(100dvh - 360px);min-height:260px;overflow:auto;overscroll-behavior:contain;border-radius:16px;scrollbar-width:thin;scrollbar-color:rgba(13,113,120,.42) transparent}
+.attendance-table-wrap .data-table{margin:0}
+.attendance-table-wrap .data-table thead th{position:sticky;top:0;z-index:2;background:#fff;box-shadow:0 1px 0 var(--line)}
+@media(max-width:780px){.attendance-table-wrap{max-height:none;min-height:0;overflow:visible}.self-password-btn{max-width:112px;overflow:hidden;text-overflow:ellipsis}}
