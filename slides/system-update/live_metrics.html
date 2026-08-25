@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>مؤشرات البيانات الحية</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+<style>
+*{box-sizing:border-box}
+.slide-container{width:1280px;min-height:720px;background:#E8F3F1;color:#0F172A;position:relative;overflow:hidden;font-family:Arial,"Tahoma",sans-serif;padding-top:68px}
+.frame{margin:0 78px}
+.kicker{font-size:16px;color:#0D9488;font-weight:700;margin-bottom:12px}
+.title{font-family:Georgia,"Times New Roman",serif;font-size:42px;line-height:1.2;margin:0 0 16px}
+.rule{margin-top:28px;border-top:1px solid #8FB8B4;margin-bottom:38px}
+.content-split{display:flex;gap:40px;align-items:flex-start}
+.metrics-grid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:30px 20px}
+.metric-box{border-right:2px solid #0D9488;padding-right:16px}
+.metric-val{font-family:Georgia,"Times New Roman",serif;font-size:48px;color:#0F172A;font-weight:700;line-height:1.1;margin-bottom:8px}
+.metric-label{font-size:18px;color:#334155}
+.chart-container{width:450px;height:320px;background:#FFFFFF;border:1px solid #A8C7C4;padding:20px}
+.bottom{position:absolute;right:78px;left:78px;bottom:48px;border-top:2px solid #0D9488;padding-top:12px;font-size:18px;color:#334155}
+.bottom strong{color:#0D9488}
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <main class="frame">
+    <div class="kicker">02 · مؤشرات البيانات الحية</div>
+    <h1 class="title">حجم الاختبار والبيانات المترابطة</h1>
+    <div class="rule"></div>
+    <div class="content-split">
+      <div class="metrics-grid">
+        <div class="metric-box"><div class="metric-val">90</div><div class="metric-label">عاملًا نشطًا</div></div>
+        <div class="metric-box"><div class="metric-val">101</div><div class="metric-label">فاتورة بيع معتمدة</div></div>
+        <div class="metric-box"><div class="metric-val">30</div><div class="metric-label">شراءً معتمدًا</div></div>
+        <div class="metric-box"><div class="metric-val">132</div><div class="metric-label">حركة مخزون</div></div>
+        <div class="metric-box"><div class="metric-val">126</div><div class="metric-label">قيدًا يوميًا</div></div>
+        <div class="metric-box"><div class="metric-val">616</div><div class="metric-label">سجل تدقيق</div></div>
+      </div>
+      <div class="chart-container">
+        <canvas id="salesChart"></canvas>
+      </div>
+    </div>
+  </main>
+  <footer class="bottom">
+    <strong>ملاحظة:</strong> تمت إضافة 11 فاتورة، أي زيادة 12.22% مقارنة بخط الأساس، دون حذف البيانات الموجودة.
+  </footer>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const ctx = document.getElementById('salesChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['قبل الجولة', 'بعد الجولة'],
+      datasets: [{
+        label: 'فواتير البيع المعتمدة',
+        data: [90, 101],
+        backgroundColor: ['#8FB8B4', '#0D9488'],
+        barThickness: 60
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'نمو فواتير البيع أثناء الاختبار', font: { size: 16, family: 'Arial' } }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 120, ticks: { font: { size: 14 } } },
+        x: { ticks: { font: { size: 16, family: 'Arial' } } }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

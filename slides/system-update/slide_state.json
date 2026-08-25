@@ -1,0 +1,93 @@
+{
+  "project_info": {
+    "title": "نظام مصنع الصندل",
+    "created": 1787636806.32,
+    "last_updated": 1787637078.79,
+    "total_slides": 8
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "state": "edited",
+      "pageNum": 1
+    },
+    {
+      "id": "changes",
+      "state": "edited",
+      "pageNum": 2
+    },
+    {
+      "id": "live_metrics",
+      "state": "edited",
+      "pageNum": 3
+    },
+    {
+      "id": "operations",
+      "state": "edited",
+      "pageNum": 4
+    },
+    {
+      "id": "printing",
+      "state": "edited",
+      "pageNum": 5
+    },
+    {
+      "id": "guidance",
+      "state": "edited",
+      "pageNum": 6
+    },
+    {
+      "id": "logo",
+      "state": "edited",
+      "pageNum": 7
+    },
+    {
+      "id": "quality_next",
+      "state": "edited",
+      "pageNum": 8
+    }
+  ],
+  "outline": [
+    {
+      "id": "cover",
+      "title": "نظام مصنع الصندل",
+      "summary": "ملخص التحديثات والطباعة ونتائج الاختبار النهائي لنظام إدارة المصنع العربي RTL."
+    },
+    {
+      "id": "changes",
+      "title": "من نظام يعمل إلى نظام يشرح نفسه",
+      "summary": "عرض موجز لتحديثات الإرشاد والطباعة وتجربة الهاتف والأمان والترابط."
+    },
+    {
+      "id": "live_metrics",
+      "title": "حجم الاختبار والبيانات المترابطة",
+      "summary": "عرض مؤشرات البيانات الحية ومقارنة فواتير البيع قبل الجولة وبعدها."
+    },
+    {
+      "id": "operations",
+      "title": "اختبار الترابط من الحركة إلى القيد",
+      "summary": "مسار العمليات المختبر من البيع والدفع حتى المخزون والخزنة والقيد وسجل التدقيق."
+    },
+    {
+      "id": "printing",
+      "title": "طباعة كل ما يحتاجه المصنع",
+      "summary": "توضيح طباعة الصفحة والتقرير والقسم والطباعة المتخصصة وتنسيق A4.",
+      "image_plan": "/home/ubuntu/upload/pasted_file_QS7pbF_image.png - Image 1 shows the printed invoice preview for the sandal factory system, matching slide 5 (reporting and printing system)"
+    },
+    {
+      "id": "guidance",
+      "title": "المستخدم لا يحتاج إلى حفظ الخطوات",
+      "summary": "عرض مركز المساعدة والجولات ووضع ما هذا ونتائج اختبار الإرشاد."
+    },
+    {
+      "id": "logo",
+      "title": "كيف أضع شعار المصنع؟",
+      "summary": "خطوات تخصيص قالب الطباعة بشعار PNG أو SVG ومسار factoryLogo."
+    },
+    {
+      "id": "quality_next",
+      "title": "النتيجة والحدود بوضوح",
+      "summary": "خلاصة الجودة والإصلاحات والحدود والخطوات المطلوبة قبل الاعتماد الكامل."
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>طباعة كل ما يحتاجه المصنع</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0}
+.slide-container{width:1280px;min-height:720px;background:#E8F3F1;color:#0F172A;position:relative;overflow:hidden;font-family:Arial,"Tahoma",sans-serif;padding-top:68px}
+.frame{margin:0 78px}
+.kicker{font-size:16px;color:#0D9488;font-weight:700;margin-bottom:12px}
+.title{font-family:Georgia,"Times New Roman",serif;font-size:42px;line-height:1.2;margin:0 0 16px}
+.rule{margin-top:20px;border-top:1px solid #8FB8B4}
+.content-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:30px;margin-top:30px}
+.print-table{width:100%;border-collapse:collapse;margin-bottom:18px}
+.print-table th,.print-table td{padding:10px 8px;border-bottom:1px solid #A8C7C4;text-align:right}
+.print-table th{color:#0D9488;font-family:Georgia,"Times New Roman",serif;font-size:20px;font-weight:700}
+.print-table td{color:#334155;font-size:18px;line-height:1.4}
+.print-table tr td:first-child{font-weight:700;color:#0F172A;width:35%}
+.features-list{list-style:none;padding:0;margin:0}
+.features-list li{position:relative;padding-right:24px;margin-bottom:8px;font-size:18px;color:#334155;line-height:1.4}
+.features-list li::before{content:"■";position:absolute;right:0;top:2px;color:#0D9488;font-size:12px}
+.image-wrapper{height:380px;border:1px solid #8FB8B4;background:#FFFFFF;display:flex;align-items:center;justify-content:center;padding:10px}
+.image-wrapper img{width:100%;height:100%;object-fit:contain}
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <main class="frame">
+    <div class="kicker">04 · التقارير والطباعة</div>
+    <h1 class="title">طباعة كل ما يحتاجه المصنع</h1>
+    <div class="rule"></div>
+    <div class="content-grid">
+      <div class="text-col">
+        <table class="print-table">
+          <thead>
+            <tr>
+              <th>النوع</th>
+              <th>الوظيفة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>طباعة الصفحة</td>
+              <td>إخراج الصفحة الداخلية كاملة</td>
+            </tr>
+            <tr>
+              <td>طباعة التقرير</td>
+              <td>التقارير التشغيلية، القوائم المالية، اليومية، التدقيق، التسوية</td>
+            </tr>
+            <tr>
+              <td>طباعة القسم</td>
+              <td>إخراج لوحة أو جدول أو مؤشرات منفردة</td>
+            </tr>
+            <tr>
+              <td>الطباعة المتخصصة</td>
+              <td>فاتورة تفصيلية وقيد يومية تفصيلي</td>
+            </tr>
+          </tbody>
+        </table>
+        <ul class="features-list">
+          <li>تنسيق A4 مخصص للطباعة الورقية.</li>
+          <li>إدراج هوية المصنع، رقم المصنع، العنوان وبيانات التواصل.</li>
+          <li>إظهار التاريخ واسم المستخدم في رأس التقرير.</li>
+          <li>إزالة الأزرار وحقول البحث من النسخة الورقية.</li>
+          <li>جداول RTL منسقة وقابلة للقراءة بوضوح.</li>
+        </ul>
+      </div>
+      <div class="img-col">
+        <div class="image-wrapper">
+          <img src="/home/ubuntu/upload/pasted_file_QS7pbF_image.png" alt="معاينة طباعة الفاتورة">
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

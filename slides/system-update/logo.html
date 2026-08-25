@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كيف أضع شعار المصنع؟</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+.slide-container { width: 1280px; min-height: 720px; background: #E8F3F1; color: #0F172A; position: relative; overflow: hidden; font-family: Arial, "Tahoma", sans-serif; padding-top: 68px; }
+.frame { margin: 0 78px; }
+.kicker { font-size: 16px; color: #0D9488; font-weight: 700; margin-bottom: 12px; }
+.title { font-family: Georgia, "Times New Roman", serif; font-size: 42px; line-height: 1.2; margin: 0 0 16px; }
+.rule { margin-top: 28px; border-top: 1px solid #8FB8B4; margin-bottom: 40px; }
+.steps-container { display: flex; flex-direction: column; gap: 28px; }
+.step { display: flex; align-items: flex-start; gap: 24px; }
+.step-number { font-family: Georgia, "Times New Roman", serif; font-size: 36px; color: #0D9488; font-weight: 700; line-height: 1; min-width: 40px; text-align: left; }
+.step-content { font-size: 22px; color: #334155; line-height: 1.5; }
+.code-block { font-family: monospace; background: #FFFFFF; border: 1px solid #A8C7C4; padding: 12px 20px; display: inline-block; margin-top: 12px; font-size: 20px; direction: ltr; text-align: left; color: #0F172A; }
+.bottom { position: absolute; right: 78px; left: 78px; bottom: 48px; border-top: 2px solid #0D9488; padding-top: 12px; font-size: 18px; color: #334155; }
+.bottom strong { color: #0D9488; }
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <main class="frame">
+    <div class="kicker">06 · تخصيص الشعار وهوية الطباعة</div>
+    <h1 class="title">كيف أضع شعار المصنع؟</h1>
+    <div class="rule"></div>
+    
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">01</div>
+        <div class="step-content">جهّز ملف الشعار بصيغة PNG أو SVG بخلفية شفافة.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <div class="step-content">ضع الملف في مجلد الأصول داخل المشروع، مثل <code>assets/factory-logo.png</code>.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          عدّل مسار الشعار في ملف <code>js/config.js</code> ليصبح كالتالي:
+          <br>
+          <div class="code-block">factoryLogo: './assets/factory-logo.png'</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">04</div>
+        <div class="step-content">ارفع الملف وبدّل إصدار الكاش (Service Worker) عند الحاجة لضمان تحديثه.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">05</div>
+        <div class="step-content">اختبر طباعة فاتورة وتقرير؛ عند غياب الشعار تظهر علامة <strong>SP</strong> البديلة تلقائيًا.</div>
+      </div>
+    </div>
+  </main>
+  <footer class="bottom">
+    <strong>ملاحظة:</strong> لم يوضع شعار تجريبي؛ أرسل الشعار المعتمد ليتم دمجه بصريًا.
+  </footer>
+</div>
+</body>
+</html>

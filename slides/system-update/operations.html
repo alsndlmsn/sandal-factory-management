@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>دورة العمليات المختبرة</title>
+<style>
+html,body{margin:0;padding:0}
+*{box-sizing:border-box}
+.slide-container{width:1280px;min-height:720px;background:#E8F3F1;color:#0F172A;position:relative;overflow:hidden;font-family:Arial,"Tahoma",sans-serif;padding-top:68px;margin-top:-1px}
+.frame{margin:0 78px}
+.kicker{font-size:16px;color:#0D9488;font-weight:700;margin-bottom:12px}
+.title{font-family:Georgia,"Times New Roman",serif;font-size:42px;line-height:1.2;margin:0 0 16px}
+.rule{margin-top:20px;border-top:1px solid #8FB8B4;margin-bottom:20px}
+.flow-container{display:flex;align-items:center;justify-content:space-between;background:#FFFFFF;border:1px solid #A8C7C4;padding:18px;margin-bottom:20px}
+.flow-step{text-align:center;font-weight:700;color:#0F172A;font-size:18px;flex:1}
+.flow-arrow{color:#0D9488;font-size:24px;font-weight:bold}
+.scenarios-title{font-family:Georgia,"Times New Roman",serif;font-size:24px;color:#0D9488;margin-bottom:12px}
+.scenarios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.scenario-item{display:flex;align-items:center;font-size:18px;color:#334155}
+.scenario-item::before{content:"■";color:#0D9488;font-size:12px;margin-left:12px}
+.bottom{position:absolute;right:78px;left:78px;bottom:40px;border-top:2px solid #0D9488;padding-top:10px;font-size:20px;color:#0F172A;font-weight:700}
+.bottom span{color:#0D9488}
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <main class="frame">
+    <div class="kicker">03 · دورة العمليات</div>
+    <h1 class="title">اختبار الترابط من الحركة إلى القيد</h1>
+    <div class="rule"></div>
+    
+    <div class="flow-container">
+      <div class="flow-step">مبيعات</div>
+      <div class="flow-arrow">&larr;</div>
+      <div class="flow-step">دفع كاش/بنك</div>
+      <div class="flow-arrow">&larr;</div>
+      <div class="flow-step">مخزون</div>
+      <div class="flow-arrow">&larr;</div>
+      <div class="flow-step">خزنة أو بنك</div>
+      <div class="flow-arrow">&larr;</div>
+      <div class="flow-step">قيد يومية</div>
+      <div class="flow-arrow">&larr;</div>
+      <div class="flow-step">سجل تدقيق</div>
+      <div class="flow-arrow">&larr;</div>
+      <div class="flow-step">تقرير</div>
+    </div>
+
+    <h2 class="scenarios-title">السيناريوهات المختبرة بنجاح:</h2>
+    <div class="scenarios-grid">
+      <div class="scenario-item">10 فواتير اختبار</div>
+      <div class="scenario-item">5 كاش + 5 بنك</div>
+      <div class="scenario-item">دفعة لاحقة واحدة</div>
+      <div class="scenario-item">مرتجع واحد</div>
+      <div class="scenario-item">مصروف واحد</div>
+      <div class="scenario-item">شراء واحد</div>
+      <div class="scenario-item">حركة مخزون واحدة</div>
+      <div class="scenario-item">إنتاج واحد</div>
+      <div class="scenario-item">فترة مرتب واحدة</div>
+      <div class="scenario-item">سلفة واحدة</div>
+      <div class="scenario-item">حافز واحد</div>
+    </div>
+  </main>
+  <footer class="bottom">
+    ملاحظة هامة: <span>أخطاء الاتزان = صفر، والسجلات اليتيمة = صفر</span> بعد الإصلاح وإعادة الاختبار.
+  </footer>
+</div>
+</body>
+</html>
