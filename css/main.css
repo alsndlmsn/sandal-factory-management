@@ -88,3 +88,12 @@
 /* Keep the desktop rail inside the viewport so only its menu scrolls */
 .sidebar{height:100dvh;max-height:100dvh;position:sticky;top:0}
 @media(max-width:780px){.sidebar{position:fixed;top:0;height:100dvh;max-height:100dvh}}
+
+/* Login password control */
+.password-control{display:flex;align-items:stretch;direction:rtl;width:100%}
+.password-control input{flex:1;min-width:0;border-radius:0 12px 12px 0!important}
+.password-toggle{min-width:76px;border:1px solid var(--line);border-right:0;border-radius:12px 0 0 12px;background:#f3f8f8;color:var(--teal-dark);font-size:11px;font-weight:800;cursor:pointer;transition:background .16s var(--ease),color .16s var(--ease),transform .16s var(--ease)}
+.password-toggle:hover{background:#e4f2ef;color:var(--navy)}
+.password-toggle:active{transform:scale(.97)}
+.password-toggle:focus-visible{outline:3px solid rgba(12,149,139,.2);outline-offset:2px}
+@media(max-width:430px){.password-toggle{min-width:70px}.login-card h2{font-size:26px}}
