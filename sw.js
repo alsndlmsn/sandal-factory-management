@@ -1,5 +1,5 @@
-const CACHE_NAME = 'sandal-factory-static-v16';
-const APP_SHELL = ['./', './index.html', './css/main.css?v=15', './js/config.js?v=15', './js/supabase.js?v=15', './js/app.js?v=15', './manifest.json'];
+const CACHE_NAME = 'sandal-factory-static-v17';
+const APP_SHELL = ['./', './index.html', './css/main.css?v=16', './js/config.js?v=16', './js/supabase.js?v=16', './js/app.js?v=16', './manifest.json'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
 });
