@@ -67,3 +67,24 @@
   .data-table tbody td,.data-table tbody th{grid-template-columns:minmax(82px,39%) minmax(0,1fr);font-size:12px}
   .data-table tbody td::before,.data-table tbody th::before{font-size:10px}
 }
+
+/* Modern navigation rail: dedicated scroll area with visible affordance */
+.sidebar{display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden}
+.sidebar nav{min-height:0;overflow-y:auto;overflow-x:hidden;padding:7px 2px 14px 4px;scrollbar-width:thin;scrollbar-color:rgba(141,211,199,.58) transparent}
+.sidebar nav::-webkit-scrollbar{width:6px}
+.sidebar nav::-webkit-scrollbar-track{background:transparent}
+.sidebar nav::-webkit-scrollbar-thumb{background:rgba(141,211,199,.48);border-radius:99px;border:1px solid rgba(255,255,255,.08)}
+.sidebar nav::-webkit-scrollbar-thumb:hover{background:rgba(141,211,199,.8)}
+.nav-group{margin-top:14px}
+.nav-group:first-child{margin-top:4px}
+.nav-label{position:sticky;top:0;z-index:2;margin:0 4px;padding:7px 10px 8px;border-radius:8px;background:linear-gradient(180deg,var(--navy) 72%,rgba(13,37,50,.82));letter-spacing:.1px}
+.nav-item{position:relative;min-height:44px;white-space:normal;overflow-wrap:normal;transition:background .16s var(--ease),color .16s var(--ease),transform .16s var(--ease)}
+.nav-item:hover{transform:translateX(-2px)}
+.nav-item.active{box-shadow:inset -3px 0 0 #9de2c7;background:linear-gradient(90deg,rgba(255,255,255,.07),rgba(141,211,199,.18))}
+.nav-item.active .nav-icon{color:#c0f0df}
+.sidebar-bottom{min-height:0;background:linear-gradient(180deg,rgba(13,37,50,0),rgba(13,37,50,.96) 22%);padding-bottom:4px}
+@media(max-width:780px){.sidebar{display:grid;overflow:hidden}.sidebar nav{padding-bottom:18px}.sidebar-bottom{padding-bottom:12px}}
+
+/* Keep the desktop rail inside the viewport so only its menu scrolls */
+.sidebar{height:100dvh;max-height:100dvh;position:sticky;top:0}
+@media(max-width:780px){.sidebar{position:fixed;top:0;height:100dvh;max-height:100dvh}}
