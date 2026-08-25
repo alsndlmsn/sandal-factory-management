@@ -49,3 +49,10 @@
 أضيفت شاشة إدخال الإنتاج اليومي مع تاريخ إنتاج مدخل وتقرير يومي وأسبوعي قابل للطباعة. أضيف مسار مستقل لحركات المواد الخام الواردة والصادرة والتحويل، مع فحص الرصيد عند الاعتماد، وأصبح تصنيف `spares` متاحًا للمخازن، بينما تسجل الاسبيرات كمنتجات لتستفيد من مسار حركات المنتجات الحالي. أضيفت شاشة عملاء الدفع الأجل مع رقم عميل وحد ائتمان ورصيد افتتاحي ورصيد مستحق محسوب من الفواتير المعتمدة المرتبطة بالعميل.
 
 نجح اختبار وقت التشغيل المعزول للصفحات الأربع: الإنتاج، المخزون، العملاء الآجلون، والمبيعات. كما نجح فحص صلاحيات Supabase بعد migration 054؛ الدوال الجديدة `create_customer` و`create_raw_stock_movement_draft` و`create_production_order_v2` و`approve_stock_movement` أعادت `anon_execute=false` و`authenticated_execute=true`.
+
+
+## ميزات الإنتاج اليومية والعملاء الآجلين وحركات الخام
+
+أضيفت migration 053 لإنشاء إدارة عملاء الدفع الأجل، وإضافة تاريخ الإنتاج المدخل، ومسار حركة خام مستقل، وتصنيف مخزن `spares`. أضيفت migration 054 بعد اكتشاف أن بعض الدوال الجديدة ورثت تنفيذ PUBLIC؛ سحبت migration 054 التنفيذ من PUBLIC وanon وأبقت authenticated فقط. أكد فحص الامتيازات النهائي أن `create_customer` و`create_raw_stock_movement_draft` و`create_production_order_v2` و`approve_stock_movement` جميعها `anon_execute=false` و`authenticated_execute=true`.
+
+نجح اختبار runtime المعزول لصفحات الإنتاج والمخزون والعملاء والمبيعات مع بيانات اختبار غير متصلة بقاعدة المصنع. بعد النشر، أعاد GitHub Pages الإصدار `app.js?v=24` وفيه `customersPage` و`production-filter` و`raw-stock-new` و`create_customer` و`p_production_date` و`data-print-page`، وأعاد Service Worker `sandal-factory-static-v25`. لم يظهر خطأ JavaScript في سجل المتصفح أثناء تحميل الشاشة العامة. لم تُنشأ أو تُحذف بيانات تشغيل خلال هذه الاختبارات.
