@@ -159,3 +159,8 @@
 [5]: ../supabase/migrations/042_user_delete_archive.sql "أرشفة المستخدمين"
 
 [6]: ../supabase/migrations/043_admin_user_archive_rpc.sql "RPC الأرشفة الآمنة"
+
+
+## تحديث النشر العام — 25 أغسطس 2026
+
+أُودع الإصدار في commit `4e70ba5` على `main`، ونجح سير `pages build and deployment` رقم `32799777815`. فُتح الرابط العام بعد النشر، فظهرت بوابة الدخول باسم المصنع واتجاه RTL. قياس الصفحة العامة أعاد `direction=rtl`، ووجود نموذج الدخول، وعدم وجود تجاوز أفقي؛ تحذير GitHub الوحيد متعلق بإجبار إجراء رفع artifact على Node.js 24 بدل Node.js 20، ولم يفشل البناء.
