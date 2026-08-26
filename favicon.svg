@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">مصنع الصندل</title>
+  <desc id="desc">أيقونة نظام مصنع الصندل</desc>
+  <rect width="64" height="64" rx="14" fill="#102b3d"/>
+  <path d="M17 15h30v8H25v7h17v8H25v11h-8V15Z" fill="#73d6c4"/>
+  <path d="M39 15h8v34h-8z" fill="#fff" opacity=".95"/>
+</svg>
