@@ -114,3 +114,13 @@
 
 /* Printing controls */
 .print-page-btn,.print-panel-btn{white-space:nowrap}.print-panel-btn{flex:0 0 auto}@media(max-width:780px){.print-page-btn,.print-panel-btn{font-size:10px;padding-inline:9px}.page-header{align-items:flex-start}.page-header .header-actions{max-width:100%}}
+
+/* تبسيط القائمة حسب الدور: عرض المهم أولًا مع الحفاظ على كل الصلاحيات داخل «المزيد». */
+.sidebar-role{margin:8px 14px 12px;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#b8d4d3;font-size:11px;line-height:1.5;text-align:center}
+.nav-more{margin:4px 0 8px;padding:0 8px}
+.nav-more summary{padding:8px 10px;color:#9fc1c0;font-size:12px;cursor:pointer;list-style:none;border-radius:8px}
+.nav-more summary::-webkit-details-marker{display:none}
+.nav-more summary::before{content:'＋';display:inline-block;margin-inline-end:5px;color:#6fd2c3}
+.nav-more[open] summary::before{content:'−'}
+.nav-more .nav-list{padding-top:3px}
+@media(max-width:700px){.sidebar-role{font-size:10px;margin-inline:10px}.nav-more summary{min-height:38px;display:flex;align-items:center}}
